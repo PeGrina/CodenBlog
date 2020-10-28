@@ -1,0 +1,38 @@
+{
+  "name": "hilog",
+  "version": "0.1.0",
+  "description": "Blog site on MERN",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development nodemon dist/app.js",
+    "start:prod": "cross-env NODE_ENV=production nodemon dist/app.js"
+  },
+  "keywords": [],
+  "author": "CBStudio",
+  "license": "Apache 2.0",
+  "dependencies": {
+    "antd": "^4.7.3",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
+    "config": "^3.3.2",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "express": "^4.17.1",
+    "express-react-views": "^0.11.0",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.10.10",
+    "node": "^15.0.1",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.2",
+    "css-loader": "^5.0.0",
+    "nodemon": "^2.0.6",
+    "style-loader": "^2.0.0"
+  }
+}
