@@ -15,6 +15,18 @@ const UserSchema = new Schema({
         required: true,
         unique: true,
         type: String
+    },
+    role: {
+        unique: false,
+        required: false,
+        type: Number,
+        default: 1
+    },
+    roleString: {
+        unique: false,
+        required: false,
+        type: String,
+        default: 'user'
     }
 });
 

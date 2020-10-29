@@ -17,8 +17,9 @@ module.exports = class Home extends React.Component{
                 title={"Home"}
                 menu={"home"}
                 breadcrumb={Bread}
+                {...this.props}
             >
-                <h1>Hello world!</h1>
+                <p>Hello</p>
             </DefaultLayout>
         );
     }

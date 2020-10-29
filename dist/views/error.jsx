@@ -16,6 +16,7 @@ module.exports = function Error(props){
         <DefaultLayout
             title={"Error"}
             breadcrumb={Bread}
+            {...props}
         >
             <h1 style={{ textAlign: 'center', fontSize: "72px" }}>{props.err} - {props.errMess}</h1>
             <div style={{ textAlign: 'center', fontSize: "24px"  }}>{message}.</div>

@@ -1,7 +1,7 @@
 const React = require('react');
 const { Component, useState } = React;
 const { DefaultLayout } = require('./layouts/default.layout');
-const { Form, Icon, Input, Button, Breadcrumb } = require('antd');
+const { Form, Input, Button, Breadcrumb } = require('antd');
 const Bread =
     (<>
         <Breadcrumb.Item>
@@ -33,6 +33,7 @@ module.exports = function Login(props){
             title={"Login page"}
             menu={"login"}
             breadcrumb={Bread}
+            {...props}
         >
             <Form {...layout}  action={"/auth/register"} method={"post"}>
                 <h1 style={{ textAlign:'center' }}> Register </h1>

@@ -14,13 +14,15 @@ const CssRouter = require('./routes/css.route.js');
 const AuthRouter = require('./routes/auth.route.js');
 const ApiV1Router = require('./routes/api.v1.route');
 const ImageRouter = require('./routes/image.route');
+const ProfileRouter = require('./routes/profile.route');
 const cors = require('cors');
 const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
-const { User } = require('./models/User');
+const { User } = require('./models/mongo');
+const _ = require('lodash');
 
 const app = express();
 
@@ -64,12 +66,16 @@ app.options('*', cors());
 console.log(chalk.green('✓') + ' CORS for ExpressJS has installed');
 
 app.get('/', async (req, res)=>{
-    if(req.isAuthorized) {
+    if(req.cookies.isAuthorized) {
         const token = req.cookies.token;
         const decoded = jwt.verify(token, config.get('server.secret'));
         if (decoded.email) {
             const user = await User.findOne({email: decoded.email});
-            res.render('home', {isAuth: req.cookies.isAuthorized, currentUser: user});
+            if(user) {
+                res.render('home', {isAuth: req.cookies.isAuthorized, currentUser: user});
+            }else{
+                res.render('home', {isAuth: false});
+            }
         } else {
             res.render('home', { isAuth: false });
         }
@@ -82,6 +88,37 @@ app.use('/css', CssRouter);
 app.use('/auth', AuthRouter);
 app.use('/api/v1', ApiV1Router);
 app.use('/image', ImageRouter);
+app.use('/profile', ProfileRouter);
+app.get('*', async (req, res)=>{
+    if(req.cookies.isAuthorized) {
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, config.get('server.secret'));
+        if (decoded.email) {
+            const user = await User.findOne({email: decoded.email});
+            res.status(404).render('error', {
+                message: '404 - Resource not found',
+                errMess: 'Not found',
+                err: 404,
+                isAuth: true,
+                currentUser: user
+            });
+        } else {
+            const errors = {
+                4: 'Client',
+                5: 'Server'
+            }
+            res.status(404).render('error', {
+                message: 'Not found',
+                errMess: errors[Math.floor((404) / 100 )] + ' error',
+                err: 404,
+                error: '404 - Resource not found',
+                isAuth: false
+            });
+        }
+    }else{
+        res.render('home', { isAuth: false })
+    }
+});
 console.log(chalk.green('✓') + ' Routes for ExpressJS has installed');
 
 const start = async () => {
