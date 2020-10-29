@@ -31,8 +31,9 @@ Router.post('/register', async (req, res)=>{
                     email,
                     password: hash
                 },(err, doc)=>{
-                    req.session.isAuthorized = true;
-                    req.session.token = jwt.sign({ username, email }, config.get('server.secret'), { algorithm: 'RS256' });
+                    const token = jwt.sign({ username, email }, config.get('server.secret'));
+                    res.cookie('isAuthorized', true);
+                    res.cookie('token', token );
                     res.status(201).render('register', {answer: `User ${username}<${email}> was created successfully`, color: 'green'});
                 });
             })
@@ -43,10 +44,21 @@ Router.post('/register', async (req, res)=>{
     }
 });
 
-Router.post('/login', (req, res)=>{
+Router.post('/login', async (req, res)=>{
     if(req.body){
-        // const { username, password } = req.body;
-        res.status(201).render('login', { answer: 'Successfully', color: 'green'})
+        const { username, password } = req.body;
+        const user = await User.findOne({ username });
+        const user2 = await User.findOne({ email: username });
+        if(!user && !user2){
+            res.status(400).render('login', { answer: 'This user isn\'t have in database.', color: 'red'  })
+        }else if((user && !bcrypt.compareSync(password, user.password)) && (user2 && !bcrypt.compareSync(password, user2.password))){
+            res.status(400).render('login', { answer: 'Invalid password.', color: 'red'  })
+        }else {
+            const token = jwt.sign({ username, email: (user? user.email: user2.email) }, config.get('server.secret'));
+            res.cookie('isAuthorized', true);
+            res.cookie('token', token );
+            res.status(201).render('login', {answer: 'Successfully', color: 'green'})
+        }
     }else{
         res.status(201).render('login', { answer: '', color: 'white'});
     }

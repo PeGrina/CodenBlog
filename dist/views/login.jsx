@@ -48,7 +48,7 @@ module.exports = function Login(props){
                     label={"Password"}
                     rules={[{ required: true}]}
                      fieldContext={"password"}>
-                    <Input placeholder="Password" name={"password"} />
+                    <Input placeholder="Password" type={"password"} name={"password"} />
                 </Form.Item>
                 <Form.Item {...tailLayout}>
                     <Button type="primary" htmlType="submit">Log in</Button>

@@ -7,6 +7,10 @@ const Bread =
     </Breadcrumb.Item>)
 
 module.exports = class Home extends React.Component{
+    constructor(props) {
+        super(props);
+        console.log(props);
+    }
     render() {
         return (
             <DefaultLayout

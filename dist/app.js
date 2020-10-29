@@ -19,6 +19,8 @@ const chalk = require('chalk');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
+const { User } = require('./models/User');
 
 const app = express();
 
@@ -61,8 +63,19 @@ console.log(chalk.green('✓') + ' JSX and React for ExpressJS has installed');
 app.options('*', cors());
 console.log(chalk.green('✓') + ' CORS for ExpressJS has installed');
 
-app.get('/', (req, res)=>{
-    res.render('home', {});
+app.get('/', async (req, res)=>{
+    if(req.isAuthorized) {
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, config.get('server.secret'));
+        if (decoded.email) {
+            const user = await User.findOne({email: decoded.email});
+            res.render('home', {isAuth: req.cookies.isAuthorized, currentUser: user});
+        } else {
+            res.render('home', { isAuth: false });
+        }
+    }else{
+        res.render('home', { isAuth: false })
+    }
 });
 
 app.use('/css', CssRouter);
